@@ -179,36 +179,35 @@ covid_input = st.sidebar.selectbox(
 )
 
 # ✅ Bouton de prédiction
-if st.sidebar.button("🚀 Lancer la prédiction"):
+# 👉 Affichage interactif dans un onglet
+tab1, tab2 = st.tabs(["📈 Résumé des données", "🔮 Prédiction personnalisée"])
 
-    if "Aucun" in [secteur_input, tranche_input, covid_input]:
-        st.warning("⚠️ Merci de sélectionner toutes les options avant de lancer la prédiction.")
-    else:
-        covid_val = 1 if covid_input == "Oui" else 0
+with tab2:
+    st.header("🔮 Résultat de la prédiction")
 
-        # Construction du DataFrame utilisateur
+    if st.sidebar.button("🚀 Lancer la prédiction"):
+        covid_val = 1 if covid_input == "Impacte Covid" else 0
+
         input_df = pd.DataFrame({
             "Score sectoriel": [score_input],
-            "Valeur ajaoutée": [valeur_input],
+            "Valeur ajoutée": [valeur_input],
             "Nombre de créations dans les 3 mois": [creations_input],
             "coronavirus": [covid_val],
             "SecteurActivité_" + secteur_input: [1],
             "TrancheEffectifs_" + tranche_input: [1],
         })
-    # Ajouter les colonnes manquantes (comme dans X)
-    for col in X.columns:
-        if col not in input_df.columns:
-            input_df[col] = 0
 
-    # Réordonner comme X
-    input_df = input_df[X.columns]
+        for col in X.columns:
+            if col not in input_df.columns:
+                input_df[col] = 0
 
-    # Prédiction
-    prediction = model.predict(input_df)[0]
-    proba = model.predict_proba(input_df)[0][1]
-    # Affichage clair de la probabilité prédite
-    st.success(f"📈 Probabilité prédite de défaut : **{proba:.2%}**")
-    st.success(f" Résultat : {'Le risque de defaut est : élevé' if prediction == 1 else 'Le risque de defaut est : faible'}")
+        input_df = input_df[X.columns]
+
+        prediction = model.predict(input_df)[0]
+        proba = model.predict_proba(input_df)[0][1]
+
+        st.success(f"📈 Probabilité prédite de défaut : **{proba:.2%}**")
+        st.success(f"🧠 Résultat : {'Élevé 🔴' if prediction == 1 else 'Faible 🟢'}")
 
 
 df_filtré = df.copy()
