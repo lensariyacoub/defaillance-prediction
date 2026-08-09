@@ -1,4 +1,22 @@
+# Environnement Python
 venv/
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
+
+# Fichiers générés par RiskVision AI
+data/history/
+reports/
+
+# Fichiers temporaires / debug
+bodacc_debug.html
+
+# Système / éditeur
+.DS_Store
+Thumbs.db
+.vscode/
+# Données intermédiaires / anciennes versions
+data/processed/
+
+# Module abandonné
+scripts/prediction_service.py
